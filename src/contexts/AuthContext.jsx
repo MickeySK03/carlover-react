@@ -11,6 +11,7 @@ export const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [allCar, setAllCar] = useState([]);
 
   useEffect(() => {
     if (getAccessToken()) {
@@ -43,9 +44,29 @@ export default function AuthContextProvider({ children }) {
     removeAccessToken();
     setAuthUser(null);
   };
+
+  const deleteCar = async (carId) => {
+    try {
+      await axios.delete(`/allcars/${carId}`);
+      setAllCar(allCar.filter((el) => el.id !== carId));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   console.log(authUser);
   return (
-    <AuthContext.Provider value={{ login, authUser, initialLoading, logout }}>
+    <AuthContext.Provider
+      value={{
+        login,
+        authUser,
+        initialLoading,
+        logout,
+        allCar,
+        setAllCar,
+        deleteCar,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

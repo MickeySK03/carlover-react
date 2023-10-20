@@ -7,7 +7,8 @@ import RegisterPage from "../pages/RegisterPage";
 import AllCarsPage from "../pages/AllCarsPage";
 import RedirectIfAuthenticated from "../features/auth/RedirectIfAuthenticated";
 import DetailCarPage from "../pages/DetailCarPage";
-import SellCarPage from "../pages/SellCarPage";
+import SellCarPage from "../admin/adminPages/SellCarPage";
+import EditCarPage from "../admin/adminPages/EditCarPage";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +32,9 @@ const router = createBrowserRouter([
         element: <RegisterPage />,
       },
       { path: "allcars", element: <AllCarsPage /> },
-      { path: "detailcar", element: <DetailCarPage /> },
+      { path: "allcars/:carId", element: <DetailCarPage /> },
       { path: "sellcar", element: <SellCarPage /> },
+      { path: "editcar/:carId", element: <EditCarPage /> },
     ],
   },
 ]);

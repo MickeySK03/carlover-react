@@ -1,6 +1,6 @@
 import bodyPic from "../assets/Used-Car-Home.png";
 import { Link } from "react-router-dom";
-import CarListDemo from "./CarListDemo";
+// import CarListDemo from "./CarListDemo";
 
 export default function HomePage() {
   return (
@@ -13,7 +13,7 @@ export default function HomePage() {
           <button>ดูเพิ่มเติม</button>
         </Link>
       </div>
-      <div className="grid gap-4 grid-cols-3 grid-rows-1 mx-10 my-3">
+      {/* <div className="grid gap-4 grid-cols-3 grid-rows-1 mx-10 my-3">
         <Link to={"/detailcar"}>
           <CarListDemo />
         </Link>
@@ -23,7 +23,7 @@ export default function HomePage() {
         <Link to={"/detailcar"}>
           <CarListDemo />
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
