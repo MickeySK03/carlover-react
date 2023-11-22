@@ -1,33 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Joi from "joi";
 import { toast } from "react-toastify";
-// import { useAuth } from "../hooks/use-auth";
 import InputErrorMessage from "../features/auth/InputErrorMessage";
 import axios from "../config/axios";
-
-const registerSchema = Joi.object({
-  username: Joi.string()
-    .pattern(/^[a-zA-Z0-9]{5,30}$/)
-    .trim()
-    .required(),
-  password: Joi.string()
-    .pattern(/^[a-zA-z0-9]{6,30}$/)
-    .trim()
-    .required(),
-  confirmPassword: Joi.string().valid(Joi.ref("password")).trim().required(),
-});
+import { registerSchema } from "../utils/auth-validator";
+import rx7 from "../../public/car/rx7.jpeg";
 
 const validateRegister = (input) => {
   const { error } = registerSchema.validate(input, { abortEarly: false });
-  console.dir(error);
   if (error) {
-    const result = error.details.reduce((acc, el) => {
-      const { message, path } = el;
-      acc[path[0]] = message;
-      return acc;
-    }, {});
-    return result;
+    const newError = {};
+    error.details.map((x) => (newError[x.path[0]] = x.message));
+    return newError;
   }
 };
 
@@ -39,15 +23,10 @@ export default function RegisterPage() {
   });
 
   const navigate = useNavigate();
-
   const [error, setError] = useState({});
 
-  // const { register } = useAuth();
   const register = async (registerInputObject) => {
-    // const res =
     await axios.post("/auth/register", registerInputObject);
-    // addAcessToken(res.data.accessToken);
-    // setAuthUser(res.data.user);
     navigate("/login");
   };
 
@@ -65,22 +44,15 @@ export default function RegisterPage() {
     register(input).catch((err) => {
       toast.error(err.response.data.message);
     });
-    // navigate("/");
   };
-  //   const registerData = {
-  //     username: input.username,
-  //     email: input.email,
-  //     password: input.password,
-  //     confirmPassword: input.confirmPassword,
-  //     phone: input.phone,
-  //   };
-  //   await axios.post(`${BACKEND_URL}/auth/register`, registerData);
 
   return (
-    <div className="">
-      <div className="flex flex-col justify-center items-center min-h-screen -my-24">
-        <form className="flex flex-col" onSubmit={handleSubmit}>
-          <h1 className="text-center">Register</h1>
+    <div className="py-6">
+      <div className="flex flex-row justify-center items-start my-32 border border-gray-900 px-3 py-12 w-fit mx-auto">
+        <form className="flex flex-col mx-32" onSubmit={handleSubmit}>
+          <div className="flex justify-center mt-12 mb-12">
+            <h1 className="text-center">Register</h1>
+          </div>
           <label>username</label>
           <div>
             <input
@@ -97,7 +69,13 @@ export default function RegisterPage() {
               onChange={handleChange}
               name="username"
             />
-            {error.username && <InputErrorMessage message={error.username} />}
+            {error.username && (
+              <InputErrorMessage
+                message={
+                  "username must be at least 6 characters, and must be letters or numbers"
+                }
+              />
+            )}
           </div>
           <label>password</label>
           <div>
@@ -115,7 +93,13 @@ export default function RegisterPage() {
               onChange={handleChange}
               name="password"
             />
-            {error.password && <InputErrorMessage message={error.password} />}
+            {error.password && (
+              <InputErrorMessage
+                message={
+                  "password must be at least 6 characters, and must be letters or numbers"
+                }
+              />
+            )}
           </div>
 
           <label>confirm password</label>
@@ -135,7 +119,7 @@ export default function RegisterPage() {
               name="confirmPassword"
             />
             {error.confirmPassword && (
-              <InputErrorMessage message={error.confirmPassword} />
+              <InputErrorMessage message={"confirm password doesn't match"} />
             )}
           </div>
           <div className="flex justify-center">
@@ -144,6 +128,9 @@ export default function RegisterPage() {
             </button>
           </div>
         </form>
+        <div className="border bg-black">
+          <img src={rx7} alt="picLogin" className="h-96" />
+        </div>
       </div>
     </div>
   );

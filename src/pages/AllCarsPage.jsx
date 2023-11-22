@@ -1,16 +1,19 @@
 import CarListDemo from "./CarListDemo";
 import axios from "../config/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/use-auth";
+import Loading from "../components/Loading";
 
 export default function AllCarsPage() {
   const { allCar, setAllCar, deleteCar } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("/allcars")
       .then((res) => {
         setAllCar(res.data.car);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -18,25 +21,21 @@ export default function AllCarsPage() {
   }, [setAllCar]);
 
   return (
-    <div className="min-h-screen">
-      <div className="flex justify-center">
-        <input
-          type="text"
-          placeholder="search"
-          className="w-screen mx-10 border my-2"
-        />
+    <>
+      {loading && <Loading />}
+      <div className="min-h-screen">
+        <div className="grid gap-4 grid-rows-[auto_1fr] grid-cols-3  mx-10 mb-3">
+          {allCar.map((el) => (
+            <CarListDemo
+              key={el.id}
+              allCar={allCar}
+              carObj={el}
+              carId={el.id}
+              deleteCar={deleteCar}
+            />
+          ))}
+        </div>
       </div>
-      <div className="grid gap-4 grid-cols-3 grid-rows-3 mx-10 mb-3">
-        {allCar.map((el) => (
-          <CarListDemo
-            allCar={allCar}
-            key={el.id}
-            carObj={el}
-            carId={el.id}
-            deleteCar={deleteCar}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }

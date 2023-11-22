@@ -9,6 +9,13 @@ import RedirectIfAuthenticated from "../features/auth/RedirectIfAuthenticated";
 import DetailCarPage from "../pages/DetailCarPage";
 import SellCarPage from "../admin/adminPages/SellCarPage";
 import EditCarPage from "../admin/adminPages/EditCarPage";
+import Authenticated from "../features/auth/RedirectIfNotAuthenticated";
+import CheckOutPage from "../pages/CheckOutPage";
+import BookSuccessPage from "../pages/BookSuccessPage";
+import UserBookCarPage from "../pages/UserBookCarPage";
+import AdminBookCarPage from "../admin/adminPages/AdminBookCarPage";
+import RedirectIfNotAdmin from "../features/auth/RedirectIfNotAdmin";
+import UserPendingCarPage from "../admin/adminPages/UserPendingCarPage";
 
 const router = createBrowserRouter([
   {
@@ -31,10 +38,78 @@ const router = createBrowserRouter([
         path: "register",
         element: <RegisterPage />,
       },
-      { path: "allcars", element: <AllCarsPage /> },
-      { path: "allcars/:carId", element: <DetailCarPage /> },
-      { path: "sellcar", element: <SellCarPage /> },
-      { path: "editcar/:carId", element: <EditCarPage /> },
+      {
+        path: "allcars",
+        element: (
+          <Authenticated>
+            <AllCarsPage />
+          </Authenticated>
+        ),
+      },
+      {
+        path: "allcars/:carId",
+        element: (
+          <Authenticated>
+            <DetailCarPage />
+          </Authenticated>
+        ),
+      },
+      {
+        path: "sellcar",
+        element: (
+          <RedirectIfNotAdmin>
+            <SellCarPage />
+          </RedirectIfNotAdmin>
+        ),
+      },
+      {
+        path: "editcar/:carId",
+        element: (
+          <RedirectIfNotAdmin>
+            <EditCarPage />
+          </RedirectIfNotAdmin>
+        ),
+      },
+      {
+        path: "checkout/:carId",
+        element: (
+          <Authenticated>
+            <CheckOutPage />
+          </Authenticated>
+        ),
+      },
+      {
+        path: "booksuccess/:carId",
+        element: (
+          <Authenticated>
+            <BookSuccessPage />
+          </Authenticated>
+        ),
+      },
+      {
+        path: "bookcar",
+        element: (
+          <Authenticated>
+            <UserBookCarPage />
+          </Authenticated>
+        ),
+      },
+      {
+        path: "adminbookcar",
+        element: (
+          <RedirectIfNotAdmin>
+            <AdminBookCarPage />
+          </RedirectIfNotAdmin>
+        ),
+      },
+      {
+        path: "adminpendingcar",
+        element: (
+          <RedirectIfNotAdmin>
+            <UserPendingCarPage />
+          </RedirectIfNotAdmin>
+        ),
+      },
     ],
   },
 ]);

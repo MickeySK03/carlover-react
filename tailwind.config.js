@@ -2,7 +2,22 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateRows: {
+        fluid: "repeat(auto-fit, minmax(20rem, 1fr))",
+      },
+    },
   },
-  plugins: [],
+  // eslint-disable-next-line no-undef
+  plugins: [require("daisyui")],
+  daisyui: {
+    theme: false,
+    darkTheme: "light",
+    base: true,
+    styled: true,
+    utils: true,
+    rtl: true,
+    prefix: "",
+    logs: true,
+  },
 };

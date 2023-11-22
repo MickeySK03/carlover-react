@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "../config/axios";
 import { useAuth } from "../hooks/use-auth";
 import { useNavigate } from "react-router-dom";
@@ -8,84 +8,167 @@ import { Link } from "react-router-dom";
 export default function DetailCarPage() {
   const [car, setCar] = useState([]);
   const { carId } = useParams();
-  const { deleteCar } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const { deleteCar, authUser } = useAuth();
+  const { state } = useLocation();
   const navigate = useNavigate();
+
+  const createdDate = new Date(car.createAt);
+  const formatDate = createdDate.toLocaleDateString("en-GB");
   // console.log(carId);
   useEffect(() => {
     axios
       .get(`/allcars/${carId}`)
       .then((res) => {
         setCar(res.data.detailCar);
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error("Error fetching car detail:", err);
+        setLoading(false);
+      });
   }, [carId]);
+
+  const handleClickConfirm = async () => {
+    await axios.patch(`/editStatus/${carId}`);
+    navigate("/adminbookcar");
+  };
+
   const handleClickDelete = () => {
     deleteCar(car.id);
     navigate("/allcars");
   };
-  return (
-    <div className="flex flex-col">
-      <div className="flex flex-row justify-center items-start">
-        <div className="h-auto w-1/2">
-          <img src={car.image} alt="alfa" className="" />
-        </div>
-        <div className="w-1/2 h-auto m-3">
-          <h1>
-            {car.brand} {car.model}
-          </h1>
-          <h1>ปี {car.year}</h1>
-          <h1>{car.price} บาท</h1>
-          <h1>{car.location}</h1>
-          <h1>{car.createAt}</h1>
-          <div className="border h-48">
-            <h1>{car.description}</h1>
-          </div>
-          <div className="flex justify-center mt-3">
-            <button className="bg-blue-400 rounded-md py-1 px-5 ">
-              Book Car
-            </button>
-          </div>
-          <div className="flex justify-center mt-3">
-            <Link to={`/editcar/${carId}`}>
-              <button className="bg-lime-300 rounded-md py-1 px-8 mx-3">
-                Edit
-              </button>
-            </Link>
-            <button
-              className="bg-red-500 rounded-md py-1 px-5 mx-3"
-              onClick={handleClickDelete}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <div className="flex flex-row justify-around w-auto border px-3">
-        <hr />
-        <div className="flex flex-col w-1/2 ">
-          <div className="flex flex-row justify-between mx-10">
-            <div>color</div>
-            <div>{car.color}</div>
+  const handleClickCancel = async () => {
+    await axios.patch(`/admincar/${carId}`);
+    navigate("/adminbookcar");
+  };
+  return (
+    <>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="flex flex-col min-h-screen">
+          <div className="flex flex-row justify-center items-center">
+            <div className="w-1/2 flex justify-center">
+              <img
+                src={car.image}
+                alt={`${car.brand} ${car.model} Image`}
+                width={500}
+                className=""
+              />
+            </div>
+            <div className="w-1/2 m-3">
+              <div className="font-bold text-xl">
+                {car.brand} {car.model}
+              </div>
+              <div className="text-lg">ปี {car.year}</div>
+              <div className="text-blue-700">ราคา {car.price} บาท</div>
+              <h1>สถานที่: {car.location}</h1>
+              <h1>วันที่ลงขาย: {formatDate}</h1>
+              <div>รายละเอียด:</div>
+              <div className="border h-48 overflow-auto p-2">
+                {car.description}
+              </div>
+              {authUser.role === "ADMIN" ? (
+                <div>
+                  {car.isReserve === false ? (
+                    <div className="flex justify-center mt-3">
+                      <Link to={`/editcar/${carId}`}>
+                        <button className="bg-lime-300 rounded-md py-1 px-8 mx-3">
+                          Edit
+                        </button>
+                      </Link>
+                      <button
+                        className="bg-red-500 rounded-md py-1 px-5 mx-3"
+                        onClick={handleClickDelete}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      {state?.status === "Pending" ? (
+                        <button
+                          className="bg-blue-500 rounded-md py-1 px-5 mx-3"
+                          onClick={handleClickConfirm}
+                        >
+                          Confirm Booking
+                        </button>
+                      ) : (
+                        <div className="hidden"></div>
+                      )}
+                      <button
+                        className="bg-red-500 text-white rounded-md py-1 px-5 mx-3"
+                        onClick={handleClickCancel}
+                      >
+                        Cancel a Booking
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  {car.isReserve === false ? (
+                    <div className="flex justify-center mt-3">
+                      <Link to={`/checkout/${carId}`}>
+                        <button className="bg-blue-400 rounded-md py-1 px-5 ">
+                          Book Car
+                        </button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center mt-3">
+                      <Link to={`/checkout/${carId}`}>
+                        <button
+                          className="bg-gray-300 rounded-md py-1 px-5 cursor-not-allowed opacity-50"
+                          disabled
+                        >
+                          Book Car
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-          <hr />
-          <div className="flex flex-row justify-between mx-10">
-            <div>mileage</div>
-            <div>{car.mileage}</div>
+
+          <div className="flex flex-row justify-around w-auto border px-3">
+            <hr />
+            <div className="flex flex-col w-1/2 ">
+              <div className="flex flex-row justify-between mx-10">
+                <div>color</div>
+                <div>{car.color}</div>
+              </div>
+              <hr />
+              <div className="flex flex-row justify-between mx-10">
+                <div>mileage</div>
+                <div>{car.mileage}</div>
+              </div>
+            </div>
+            <div className="flex flex-col w-1/2">
+              <div className="flex flex-row justify-between mx-10">
+                <div>fuelType</div>
+                <div>{car.fuelType}</div>
+              </div>
+              <hr />
+              <div className="flex flex-row justify-between mx-10">
+                <div>transmission</div>
+                <div>{car.transmission}</div>
+              </div>
+            </div>
           </div>
+          {state?.status === "Pending" ? (
+            <div className=" flex flex-col justify-center items-center mt-10">
+              <div className="font-semibold mb-4">หลักฐานการชำระเงิน</div>
+              <img src={state.image} alt="" className="w-[300px]" />
+            </div>
+          ) : (
+            <div className="hidden"></div>
+          )}
         </div>
-        <div className="flex flex-col w-1/2">
-          <div className="flex flex-row justify-between mx-10">
-            <div>fuelType</div>
-            <div>{car.fuelType}</div>
-          </div>
-          <hr />
-          <div className="flex flex-row justify-between mx-10">
-            <div>transmission</div>
-            <div>{car.transmission}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
