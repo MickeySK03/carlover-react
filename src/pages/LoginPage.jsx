@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/use-auth";
 // import { toast } from "react-toastify";
 import InputErrorMessage from "../features/auth/InputErrorMessage";
-import jaguar from "../../public/car/jaguar/jaguar2.jpeg";
+import jaguar from "../assets/jaguar2.jpeg";
 
 export default function LoginPage() {
   const [input, setInput] = useState({

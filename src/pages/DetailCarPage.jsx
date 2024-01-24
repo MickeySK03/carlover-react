@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "../config/axios";
 import { useAuth } from "../hooks/use-auth";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Loading from "../components/Loading";
+import { useEffect, useState } from "react";
 
 export default function DetailCarPage() {
+  const { deleteCar, authUser, loading, setLoading } = useAuth();
+  const { state } = useLocation();
   const [car, setCar] = useState([]);
   const { carId } = useParams();
-  const [loading, setLoading] = useState(true);
-  const { deleteCar, authUser } = useAuth();
-  const { state } = useLocation();
   const navigate = useNavigate();
 
-  const createdDate = new Date(car.createAt);
-  const formatDate = createdDate.toLocaleDateString("en-GB");
-  // console.log(carId);
+  console.log(state);
+
   useEffect(() => {
     axios
       .get(`/allcars/${carId}`)
@@ -27,7 +26,12 @@ export default function DetailCarPage() {
         console.error("Error fetching car detail:", err);
         setLoading(false);
       });
-  }, [carId]);
+  }, [carId, setLoading]);
+
+  const createdDate = new Date(car.createAt);
+  const formatDate = createdDate.toLocaleDateString("en-GB");
+  const price = Number(car.price).toLocaleString();
+  const mileage = Number(car.mileage).toLocaleString();
 
   const handleClickConfirm = async () => {
     await axios.patch(`/editStatus/${carId}`);
@@ -46,7 +50,7 @@ export default function DetailCarPage() {
   return (
     <>
       {loading ? (
-        <div>Loading...</div>
+        <div>{Loading}</div>
       ) : (
         <div className="flex flex-col min-h-screen">
           <div className="flex flex-row justify-center items-center">
@@ -63,7 +67,7 @@ export default function DetailCarPage() {
                 {car.brand} {car.model}
               </div>
               <div className="text-lg">ปี {car.year}</div>
-              <div className="text-blue-700">ราคา {car.price} บาท</div>
+              <div className="text-blue-700">ราคา {price} บาท</div>
               <h1>สถานที่: {car.location}</h1>
               <h1>วันที่ลงขาย: {formatDate}</h1>
               <div>รายละเอียด:</div>
@@ -144,7 +148,7 @@ export default function DetailCarPage() {
               <hr />
               <div className="flex flex-row justify-between mx-10">
                 <div>mileage</div>
-                <div>{car.mileage}</div>
+                <div>{mileage}</div>
               </div>
             </div>
             <div className="flex flex-col w-1/2">

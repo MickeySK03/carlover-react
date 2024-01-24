@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import InputErrorMessage from "../features/auth/InputErrorMessage";
 import axios from "../config/axios";
 import { registerSchema } from "../utils/auth-validator";
-import rx7 from "../../public/car/rx7.jpeg";
+import rx7 from "../assets/rx7.jpeg";
 
 const validateRegister = (input) => {
   const { error } = registerSchema.validate(input, { abortEarly: false });

@@ -4,7 +4,7 @@ import wheel from "../../assets/carDetail/wheelDrive.svg";
 import fuel from "../../assets/carDetail/gasStation.svg";
 import passenger from "../../assets/carDetail/person.svg";
 
-export default function UserPendingCarForm({ carObj, carId }) {
+export default function AdminPendingCarForm({ carObj, carId }) {
   const createdDate = new Date(carObj.createAt);
   const formatDate = createdDate.toLocaleDateString("en-GB");
 

@@ -11,7 +11,9 @@ export const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [allCar, setAllCar] = useState([]);
+  const [adminCar, setAdminCar] = useState([]);
 
   useEffect(() => {
     if (getAccessToken()) {
@@ -27,6 +29,28 @@ export default function AuthContextProvider({ children }) {
       setInitialLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    axios
+      .get("/allcars")
+      .then((res) => {
+        setAllCar(res.data.car);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [setAllCar]);
+
+  useEffect(() => {
+    axios
+      .get("/adminPendingCar")
+      .then((res) => {
+        setAdminCar(res.data.pendingCar);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, [setAdminCar]);
 
   const login = async (credential) => {
     const res = await axios.post("/auth/login", credential);
@@ -54,17 +78,19 @@ export default function AuthContextProvider({ children }) {
     }
   };
 
-  console.log(authUser);
   return (
     <AuthContext.Provider
       value={{
         login,
         authUser,
         initialLoading,
+        loading,
+        setLoading,
         logout,
         allCar,
         setAllCar,
         deleteCar,
+        adminCar,
       }}
     >
       {children}

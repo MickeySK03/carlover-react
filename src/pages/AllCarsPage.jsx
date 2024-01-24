@@ -1,24 +1,9 @@
-import CarListDemo from "./CarListDemo";
-import axios from "../config/axios";
-import { useEffect, useState } from "react";
+import CarListDemo from "../features/products/CarListDemo";
 import { useAuth } from "../hooks/use-auth";
 import Loading from "../components/Loading";
 
 export default function AllCarsPage() {
-  const { allCar, setAllCar, deleteCar } = useAuth();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios
-      .get("/allcars")
-      .then((res) => {
-        setAllCar(res.data.car);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [setAllCar]);
+  const { allCar, loading } = useAuth();
 
   return (
     <>
@@ -26,13 +11,7 @@ export default function AllCarsPage() {
       <div className="min-h-screen">
         <div className="grid gap-4 grid-rows-[auto_1fr] grid-cols-3  mx-10 mb-3">
           {allCar.map((el) => (
-            <CarListDemo
-              key={el.id}
-              allCar={allCar}
-              carObj={el}
-              carId={el.id}
-              deleteCar={deleteCar}
-            />
+            <CarListDemo key={el.id} carObj={el} carId={el.id} />
           ))}
         </div>
       </div>

@@ -7,15 +7,15 @@ import RegisterPage from "../pages/RegisterPage";
 import AllCarsPage from "../pages/AllCarsPage";
 import RedirectIfAuthenticated from "../features/auth/RedirectIfAuthenticated";
 import DetailCarPage from "../pages/DetailCarPage";
-import SellCarPage from "../admin/adminPages/SellCarPage";
-import EditCarPage from "../admin/adminPages/EditCarPage";
+import SellCarPage from "../pages/SellCarPage";
+import EditCarPage from "../pages/EditCarPage";
 import Authenticated from "../features/auth/RedirectIfNotAuthenticated";
 import CheckOutPage from "../pages/CheckOutPage";
 import BookSuccessPage from "../pages/BookSuccessPage";
 import UserBookCarPage from "../pages/UserBookCarPage";
-import AdminBookCarPage from "../admin/adminPages/AdminBookCarPage";
+import AdminBookCarPage from "../pages/AdminBookCarPage";
 import RedirectIfNotAdmin from "../features/auth/RedirectIfNotAdmin";
-import UserPendingCarPage from "../admin/adminPages/UserPendingCarPage";
+import AdminPendingCarPage from "../pages/AdminPendingCarPage";
 
 const router = createBrowserRouter([
   {
@@ -106,7 +106,7 @@ const router = createBrowserRouter([
         path: "adminpendingcar",
         element: (
           <RedirectIfNotAdmin>
-            <UserPendingCarPage />
+            <AdminPendingCarPage />
           </RedirectIfNotAdmin>
         ),
       },

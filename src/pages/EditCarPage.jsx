@@ -1,21 +1,19 @@
-import { useState, useRef } from "react";
-import Loading from "../../components/Loading";
-import axios from "../../config/axios";
-import { useAuth } from "../../hooks/use-auth";
-import { ImageIcon } from "../../icons";
-import { useNavigate } from "react-router-dom";
-import InputErrorMessage from "../../features/auth/InputErrorMessage";
-import { createProductSchema } from "../../utils/product-validator";
-import validateSchema from "../../utils/validate-schema";
+import { useState, useRef, useEffect } from "react";
+import Loading from "../components/Loading";
+import axios from "../config/axios";
+import { useAuth } from "../hooks/use-auth";
+import { useNavigate, useParams } from "react-router-dom";
+import validateSchema from "../utils/validate-schema";
+import { createProductSchema } from "../utils/product-validator";
+import InputErrorMessage from "../features/auth/InputErrorMessage";
 
-export default function SellCarPage() {
+export default function EditCarPage() {
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [err, setErr] = useState("");
   const fileEl = useRef(null);
-  const { allCar, setAllCar } = useAuth();
-  const [carDetails, setCarDetails] = useState({
+  const { setAllCar, loading, setLoading } = useAuth();
+  const { carId } = useParams();
+  const [input, setInput] = useState({
     brand: "",
     model: "",
     year: "",
@@ -29,38 +27,55 @@ export default function SellCarPage() {
     reservePrice: "",
     driveTrain: "",
     seat: "",
+    image: "",
   });
 
+  useEffect(() => {
+    axios
+      .get(`/allcars/${carId}`)
+      .then((res) => {
+        setInput(res.data.detailCar);
+      })
+      .catch((err) => console.log("Error fetching car detail:", err));
+  }, [carId]);
+
+  const {
+    brand,
+    model,
+    year,
+    color,
+    mileage,
+    fuelType,
+    transmission,
+    location,
+    description,
+    price,
+    reservePrice,
+    driveTrain,
+    seat,
+    image,
+  } = input;
+
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCarDetails((prevDetail) => ({ ...prevDetail, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
   const handleSubmitForm = async (e) => {
     try {
       e.preventDefault();
-      setLoading(true);
-      const result = validateSchema(createProductSchema, carDetails);
+      delete input.createAt;
+      delete input.id;
+      delete input.isReserve;
+      const result = validateSchema(createProductSchema, input);
       if (result) {
         return setError(result);
       }
-
+      setLoading(true);
       const formData = createFormData();
-      const res = await axios.post("/sellcar", formData);
-      const newPost = res.data.post;
-      setAllCar([newPost, ...allCar]);
+      await axios.patch(`/allcars/${carId}`, formData);
+      const res = await axios.get("/allcars");
+      const updateCar = res.data.car;
+      setAllCar(updateCar);
       navigate("/allcars");
     } catch (err) {
       console.log(err);
-      setErr(err.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -69,99 +84,103 @@ export default function SellCarPage() {
   const createFormData = () => {
     const formData = new FormData();
     formData.append("image", file);
-    for (const key in carDetails) {
-      if (carDetails[key]) {
-        formData.append(key, carDetails[key]);
+    for (const key in input) {
+      if (input[key]) {
+        formData.append(key, input[key]);
       }
     }
     return formData;
   };
 
+  console.log(file);
+
   return (
     <>
       {loading && <Loading />}
-      <form onSubmit={handleSubmitForm}>
-        <h1 className="text-center text-lg m-3">ลงขายรถ</h1>
-        <div className="flex flex-row justify-evenly">
-          <div>
+      <form onSubmit={handleSubmitForm} className="flex flex-col">
+        <h1 className="text-center text-lg m-3">Edit Car Form</h1>
+        <div className="flex flex-row justify-evenly bg-red-200">
+          <div className="bg-green-200">
             <h4>Brand</h4>
             <input
-              name="brand"
               type="text"
               placeholder="brand"
               className="border bg-slate-50"
-              value={carDetails.brand}
-              onChange={handleChange}
+              value={brand}
+              onChange={(e) => setInput({ ...input, brand: e.target.value })}
+              name="brand"
             />
             {error.brand && <InputErrorMessage message={error.brand} />}
             <h4>Model</h4>
             <input
-              name="model"
               type="text"
               placeholder="model"
               className="border bg-slate-50"
-              value={carDetails.model}
-              onChange={handleChange}
+              value={model}
+              onChange={(e) => setInput({ ...input, model: e.target.value })}
+              name="model"
             />
             {error.model && <InputErrorMessage message={error.model} />}
             <h4>years</h4>
             <input
-              name="year"
               type="text"
               placeholder="years"
               className="border bg-slate-50"
-              value={carDetails.year}
-              onChange={handleChange}
+              value={year}
+              onChange={(e) => setInput({ ...input, year: e.target.value })}
+              name="year"
             />
             {error.year && <InputErrorMessage message={error.year} />}
             <h4>color</h4>
             <input
-              name="color"
               type="text"
               placeholder="color"
               className="border bg-slate-50"
-              value={carDetails.color}
-              onChange={handleChange}
+              value={color}
+              onChange={(e) => setInput({ ...input, color: e.target.value })}
+              name="color"
             />
             {error.color && <InputErrorMessage message={error.color} />}
             <h4>mileage</h4>
             <input
-              name="mileage"
               type="text"
               placeholder="mileage"
               className="border bg-slate-50"
-              value={carDetails.mileage}
-              onChange={handleChange}
+              value={mileage}
+              onChange={(e) => setInput({ ...input, mileage: e.target.value })}
+              name="mileage"
             />
             {error.mileage && <InputErrorMessage message={error.mileage} />}
             <h4>seat</h4>
             <input
-              name="seat"
               type="text"
               placeholder="seat"
               className="border bg-slate-50"
-              value={carDetails.seat}
-              onChange={handleChange}
+              value={seat}
+              onChange={(e) => setInput({ ...input, seat: e.target.value })}
+              name="seat"
             />
             {error.seat && <InputErrorMessage message={error.seat} />}
             <h4>fueltype</h4>
             <input
-              name="fuelType"
               type="text"
               placeholder="fuelType"
               className="border bg-slate-50"
-              value={carDetails.fuelType}
-              onChange={handleChange}
+              value={fuelType}
+              onChange={(e) => setInput({ ...input, fuelType: e.target.value })}
+              name="fuelType"
             />
             {error.fuelType && <InputErrorMessage message={error.fuelType} />}
             <h4>transmission</h4>
             <input
-              name="transmission"
               type="text"
               placeholder="transmission"
               className="border bg-slate-50"
-              value={carDetails.transmission}
-              onChange={handleChange}
+              value={transmission}
+              onChange={(e) =>
+                setInput({ ...input, transmission: e.target.value })
+              }
+              name="transmission"
             />
             {error.transmission && (
               <InputErrorMessage message={error.transmission} />
@@ -170,56 +189,62 @@ export default function SellCarPage() {
           <div>
             <h4>location</h4>
             <input
-              name="location"
               type="text"
               placeholder="location"
               className="border bg-slate-50"
-              value={carDetails.location}
-              onChange={handleChange}
+              value={location}
+              onChange={(e) => setInput({ ...input, location: e.target.value })}
+              name="location"
             />
             {error.location && <InputErrorMessage message={error.location} />}
             <h4>price</h4>
             <input
-              name="price"
               type="text"
               placeholder="price"
               className="border bg-slate-50"
-              value={carDetails.price}
-              onChange={handleChange}
+              value={price}
+              onChange={(e) => setInput({ ...input, price: e.target.value })}
+              name="price"
             />
             {error.price && <InputErrorMessage message={error.price} />}
             <h4>book price</h4>
             <input
-              name="reservePrice"
               type="text"
               placeholder="reservePrice"
               className="border bg-slate-50"
-              value={carDetails.reservePrice}
-              onChange={handleChange}
+              value={reservePrice}
+              onChange={(e) =>
+                setInput({ ...input, reservePrice: e.target.value })
+              }
+              name="reservePrice"
             />
             {error.reservePrice && (
               <InputErrorMessage message={error.reservePrice} />
             )}
             <h4>drivetrain</h4>
             <input
-              name="driveTrain"
               type="text"
               placeholder="drivetrain"
               className="border bg-slate-50"
-              value={carDetails.driveTrain}
-              onChange={handleChange}
+              value={driveTrain}
+              onChange={(e) =>
+                setInput({ ...input, driveTrain: e.target.value })
+              }
+              name="driveTrain"
             />
             {error.driveTrain && (
               <InputErrorMessage message={error.driveTrain} />
             )}
             <h4>description</h4>
-            <input
-              name="description"
+            <textarea
               type="text"
               placeholder="description"
-              className="border bg-slate-50 w-60 h-48"
-              value={carDetails.description}
-              onChange={handleChange}
+              className="border bg-slate-50"
+              value={description}
+              onChange={(e) =>
+                setInput({ ...input, description: e.target.value })
+              }
+              name="description"
             />
             {error.description && (
               <InputErrorMessage message={error.description} />
@@ -228,46 +253,35 @@ export default function SellCarPage() {
         </div>
         {file ? (
           <div
-            className="flex justify-center w-full"
+            className="flex justify-center"
             onClick={() => fileEl.current.click()}
           >
-            <img width={500} src={URL.createObjectURL(file)} alt="post" />
+            <img src={URL.createObjectURL(file)} alt="post" />
           </div>
         ) : (
-          <>
-            <SelectImageButton onClick={() => fileEl.current.click()} />
-            <div className="flex justify-center">
-              {err && <InputErrorMessage message={err} />}
-            </div>
-          </>
+          <img
+            width={500}
+            className="mx-auto p-7"
+            src={image}
+            onClick={() => fileEl.current.click()}
+          />
         )}
         <input
           type="file"
           className="hidden"
           ref={fileEl}
-          onChange={handleImageChange}
+          onChange={(e) => {
+            if (e.target.files[0]) {
+              setFile(e.target.files[0]);
+            }
+          }}
         />
-
         <div className="flex justify-center mt-5">
           <button className="border bg-blue-300 px-3 rounded-md m-3">
-            ลงขาย
+            Update
           </button>
         </div>
       </form>
     </>
-  );
-}
-
-function SelectImageButton({ onClick }) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-gray-200 hover:bg-gray-300 rounded-lg py-12 flex flex-col items-center cursor-pointer mx-80"
-    >
-      <div className="bg-gray-400 h-10 w-10 rounded-full flex items-center justify-center">
-        <ImageIcon />
-      </div>
-      <span>Add photo</span>
-    </div>
   );
 }

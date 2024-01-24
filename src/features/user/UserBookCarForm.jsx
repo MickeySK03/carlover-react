@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import calender from "../assets/carDetail/calender.svg";
-import wheel from "../assets/carDetail/wheelDrive.svg";
-import fuel from "../assets/carDetail/gasStation.svg";
-import passenger from "../assets/carDetail/person.svg";
+import calender from "../../assets/carDetail/calender.svg";
+import wheel from "../../assets/carDetail/wheelDrive.svg";
+import fuel from "../../assets/carDetail/gasStation.svg";
+import passenger from "../../assets/carDetail/person.svg";
 
 export default function UserBookCarForm({ carObj, carId }) {
   const createdDate = new Date(carObj.createAt);

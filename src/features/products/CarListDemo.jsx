@@ -1,9 +1,11 @@
-import calender from "../assets/carDetail/calender.svg";
-import wheel from "../assets/carDetail/wheelDrive.svg";
-import fuel from "../assets/carDetail/gasStation.svg";
-import passenger from "../assets/carDetail/person.svg";
+import calender from "../../assets/carDetail/calender.svg";
+import wheel from "../../assets/carDetail/wheelDrive.svg";
+import fuel from "../../assets/carDetail/gasStation.svg";
+import passenger from "../../assets/carDetail/person.svg";
 import { Link } from "react-router-dom";
 export default function CarListDemo({ carObj, carId }) {
+  const price = Number(carObj.price).toLocaleString();
+
   return (
     <Link to={`/allcars/${carId}`}>
       <div className="flex flex-col border m-3">
@@ -17,7 +19,7 @@ export default function CarListDemo({ carObj, carId }) {
         <div className="m-3">
           <h1>ยี่ห้อ {carObj.brand}</h1>
           <h1>รุ่น {carObj.model}</h1>
-          <h1>ราคา {carObj.price} บาท</h1>
+          <h1>ราคา {price} บาท</h1>
         </div>
         <div className="grid gap-4 grid-cols-2 grid-rows-2 m-3">
           <div className="flex flex-row items-center  ">

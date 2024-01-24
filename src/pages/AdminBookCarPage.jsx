@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "../../config/axios";
-import AdminBookCarForm from "./AdminBookCarForm";
-import Loading from "../../components/Loading";
+import axios from "../config/axios";
+import AdminBookCarForm from "../features/admin/AdminBookCarForm";
+import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
 
 export default function AdminBookCarPage() {
