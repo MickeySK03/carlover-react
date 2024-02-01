@@ -11,7 +11,7 @@ export default function EditCarPage() {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const fileEl = useRef(null);
-  const { setAllCar, loading, setLoading } = useAuth();
+  const {  loading, setLoading,setAllCar } = useAuth();
   const { carId } = useParams();
   const [input, setInput] = useState({
     brand: "",

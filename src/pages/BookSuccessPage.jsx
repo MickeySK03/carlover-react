@@ -14,7 +14,7 @@ export default function BookSuccessPage() {
       .catch((err) => console.log(err));
   }, [setBookCar]);
 
-  console.log(bookcar);
+  // console.log(bookcar);
   return (
     <div className="flex flex-col justify-center items-center py-64">
       <div>

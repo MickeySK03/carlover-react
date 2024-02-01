@@ -49,7 +49,6 @@ export default function CheckOutPage() {
       }
       setLoading(true);
       await axios.post(`/bookcar/${carId}`, formData);
-
       navigate(`/booksuccess/${carId}`);
     } catch (err) {
       console.log(err);

@@ -5,7 +5,19 @@ import CarouselPage from "./CarouselPage";
 import Loading from "../components/Loading";
 
 export default function HomePage() {
-  const { allCar, loading } = useAuth();
+  const { loading, allCar } = useAuth();
+
+  // useEffect(() => {
+  //   axios
+  //     .get("/allcars")
+  //     .then((res) => {
+  //       setAllCar(res.data.car);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [setAllCar, setLoading]);
 
   return (
     <>
@@ -16,7 +28,7 @@ export default function HomePage() {
         </div>
         <div className="text-end mx-6">
           <Link to="/allcars">
-            <button>ดูเพิ่มเติม</button>
+            <button className="">ดูเพิ่มเติม</button>
           </Link>
         </div>
         {allCar.length > 0 ? (

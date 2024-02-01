@@ -6,6 +6,9 @@ export default {
       gridTemplateRows: {
         fluid: "repeat(auto-fit, minmax(20rem, 1fr))",
       },
+      fontFamily: {
+        sans: ["Kanit"],
+      },
     },
   },
   // eslint-disable-next-line no-undef

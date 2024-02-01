@@ -3,18 +3,15 @@ import wheel from "../../assets/carDetail/wheelDrive.svg";
 import fuel from "../../assets/carDetail/gasStation.svg";
 import passenger from "../../assets/carDetail/person.svg";
 import { Link } from "react-router-dom";
+
 export default function CarListDemo({ carObj, carId }) {
   const price = Number(carObj.price).toLocaleString();
 
   return (
     <Link to={`/allcars/${carId}`}>
-      <div className="flex flex-col border m-3">
-        <div className="">
-          <img
-            src={carObj.image}
-            alt="ImgCar"
-            className="float-left min-w-full w-[500px] h-[400px]"
-          />
+      <div className="border rounded-lg m-3 overflow-hidden hover:translate-y-5 hover:ring ring-sky-700">
+        <div className="object-cover">
+          <img src={carObj.image} alt="ImgCar" className="w-full h-auto" />
         </div>
         <div className="m-3">
           <h1>ยี่ห้อ {carObj.brand}</h1>

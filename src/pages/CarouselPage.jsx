@@ -4,9 +4,9 @@ export default function Carousel({ carObj, carId }) {
   return (
     <Link to={`/allcars/${carId}`}>
       <div className="carousel-item">
-        <div className="bg-white rounded-2xl">
-          <div className="max-w-sm">
-            <img src={carObj.image} className="rounded-box" />
+        <div className="bg-white rounded-2xl hover:ring ring-sky-600">
+          <div className="max-w-sm object-cover">
+            <img src={carObj.image} className="rounded-box max-h-64" />
           </div>
           <div className="m-3">
             <h1>

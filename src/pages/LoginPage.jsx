@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useAuth } from "../hooks/use-auth";
 // import { toast } from "react-toastify";
 import InputErrorMessage from "../features/auth/InputErrorMessage";
-import jaguar from "../assets/jaguar2.jpeg";
+import loginIcon from "../assets/login3.png";
+import RegisterContainer from "../features/auth/RegisterContainer";
 
 export default function LoginPage() {
   const [input, setInput] = useState({
@@ -21,10 +22,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-start border border-gray-900 px-3 py-10 w-[800px]  mx-auto">
-      <div className="mx-5">
-        <div className="flex justify-center mt-12 mb-12">
-          <h1>Log in</h1>
+    <div className="flex flex-row justify-center border border-blue-500 rounded-lg px-3 w-[900px] mx-auto my-auto">
+      <div className="flex flex-col ml-12 my-auto">
+        <div className="flex justify-center mb-12">
+          <h1 className="text-xl">Log in</h1>
         </div>
         <form className="flex flex-col" onSubmit={handleSubmitForm}>
           <label className="text-center">username</label>
@@ -52,9 +53,22 @@ export default function LoginPage() {
           </div>
           {error && <InputErrorMessage message={error} />}
         </form>
+        <div className="text-center">Need and account?</div>
+        {/* <Link to={"/register"}>
+          <div className="text-red-800 text-center hover:underline hover:text-red-600">
+            Register
+          </div>
+        </Link> */}
+        <div>
+          <RegisterContainer />
+        </div>
       </div>
-      <div className="border bg-black">
-        <img src={jaguar} alt="picLogin" className="h-96" />
+      <div className=" rounded-xl">
+        <img
+          src={loginIcon}
+          alt="picLogin"
+          className="w-auto h-auto rounded-xl"
+        />
       </div>
     </div>
   );

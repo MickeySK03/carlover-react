@@ -9,13 +9,12 @@ import validateSchema from "../utils/validate-schema";
 import { ImageIcon } from "../icons";
 
 export default function SellCarPage() {
-  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [err, setErr] = useState("");
   const [file, setFile] = useState(null);
   const fileEl = useRef(null);
-  const { allCar, setAllCar, loading, setLoading } = useAuth();
+  const { loading, setLoading,setAllCar,allCar } = useAuth();
   const [carDetails, setCarDetails] = useState({
     brand: "",
     model: "",

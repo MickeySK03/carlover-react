@@ -8,7 +8,6 @@ export default function UserBookCarForm({ carObj, carId }) {
   const createdDate = new Date(carObj.createAt);
   const formatDate = createdDate.toLocaleDateString("en-GB");
 
-  console.log(carObj);
   return (
     <Link to={`/allcars/${carId}`}>
       <div className="flex flex-row border rounded-lg overflow-hidden h-auto w-auto m-3 bg-white shadow-md">
