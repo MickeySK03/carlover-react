@@ -69,7 +69,7 @@ export default function Dropdown() {
                     </Link>
                   </div>
                   <div>
-                    <Link to="/sellcar">
+                    <Link to={"/sellcar"} onClick={() => setIsOpen(false)}>
                       <div className="flex gap-4 p-2 items-center rounded-xl hover:bg-gray-100">
                         <button>ลงขายรถ</button>
                       </div>

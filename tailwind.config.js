@@ -12,15 +12,15 @@ export default {
     },
   },
   // eslint-disable-next-line no-undef
-  plugins: [require("daisyui")],
-  daisyui: {
-    theme: false,
-    darkTheme: "light",
-    base: true,
-    styled: true,
-    utils: true,
-    rtl: true,
-    prefix: "",
-    logs: true,
-  },
+  // plugins: [require("daisyui")],
+  // daisyui: {
+  //   theme: false,
+  //   darkTheme: "light",
+  //   base: true,
+  //   styled: true,
+  //   utils: true,
+  //   rtl: true,
+  //   prefix: "",
+  //   logs: true,
+  // },
 };

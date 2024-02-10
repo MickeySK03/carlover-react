@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* html {
-  font-family: "Kanit", sans-serif;
-  src: url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
-} */
+@layer base {
+  .slick-dots.slick-thumb {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
+  }
+  .slick-dots > li {
+    width: 100px;
+  }
+}

@@ -3,26 +3,28 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
 import CarouselPage from "./CarouselPage";
 import Loading from "../components/Loading";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export default function HomePage() {
   const { loading, allCar } = useAuth();
 
-  // useEffect(() => {
-  //   axios
-  //     .get("/allcars")
-  //     .then((res) => {
-  //       setAllCar(res.data.car);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, [setAllCar, setLoading]);
+  const settings = {
+    dots: false,
+    infinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    speed: 5000,
+    autoplaySpeed: 4000,
+    cssEase: "linear",
+  };
 
   return (
     <>
       {loading && <Loading />}
-      <div className="">
+      <div className="flex flex-col">
         <div className="flex justify-center">
           <img src={bodyPic} alt="usecarhome" className="items-center" />
         </div>
@@ -32,15 +34,17 @@ export default function HomePage() {
           </Link>
         </div>
         {allCar.length > 0 ? (
-          <div className="carousel carousel-center w-full h-auto p-4 space-x-4 bg-neutral rounded-box">
-            {allCar.map((el) => (
-              <CarouselPage
-                allCar={allCar}
-                key={el.id}
-                carObj={el}
-                carId={el.id}
-              />
-            ))}
+          <div className="overflow-hidden bg-slate-400 py-2 rounded-lg">
+            <Slider {...settings}>
+              {allCar.map((el) => (
+                <CarouselPage
+                  allCar={allCar}
+                  key={el.id}
+                  carObj={el}
+                  carId={el.id}
+                />
+              ))}
+            </Slider>
           </div>
         ) : (
           <div className="text-center">no car to preview</div>

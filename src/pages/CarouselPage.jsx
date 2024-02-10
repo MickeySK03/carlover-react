@@ -1,19 +1,31 @@
 import { Link } from "react-router-dom";
+import TitleLetter from "../components/TitleLetter";
+import LocaleString from "../components/LocaleString";
 export default function Carousel({ carObj, carId }) {
-  const price = Number(carObj.price).toLocaleString();
   return (
     <Link to={`/allcars/${carId}`}>
-      <div className="carousel-item">
-        <div className="bg-white rounded-2xl hover:ring ring-sky-600">
-          <div className="max-w-sm object-cover">
-            <img src={carObj.image} className="rounded-box max-h-64" />
-          </div>
-          <div className="m-3">
-            <h1>
-              {carObj.brand} {carObj.model}
-            </h1>
-            <h1>{carObj.year}</h1>
-            <h1>{price}</h1>
+      <div className="felx flex-col mx-2 hover:ring rounded-xl ring-sky-600  mt-2 hover:bg-slate-300 bg-slate-200">
+        <div className="">
+          <img
+            src={carObj.imageCar[0]?.image}
+            className="mx-auto rounded-3xl object-cover px-2 h-[270px] w-[400px]"
+          />
+        </div>
+        <div className="flex justify-center items-center rounded-lg w-full my-3">
+          <div>
+            <div className="flex flex-row gap-2 text-xl font-bold">
+              <div>{carObj.year}</div>
+              <div>
+                <TitleLetter text={carObj.brand} />
+              </div>
+              <div>{carObj.model}</div>
+            </div>
+            <div>
+              <LocaleString number={carObj.mileage} /> km
+            </div>
+            <div>
+              ราคา <LocaleString number={carObj.price} /> บาท
+            </div>
           </div>
         </div>
       </div>

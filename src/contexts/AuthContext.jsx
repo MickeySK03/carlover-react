@@ -13,6 +13,8 @@ export default function AuthContextProvider({ children }) {
   const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [allCar, setAllCar] = useState([]);
+  const [carId, setCarId] = useState(null);
+  const [car, setCar] = useState([]);
 
   useEffect(() => {
     if (getAccessToken()) {
@@ -44,6 +46,21 @@ export default function AuthContextProvider({ children }) {
       setLoading(false);
     }
   }, [authUser, setAllCar]);
+
+  useEffect(() => {
+    if (carId) {
+      axios
+        .get(`/allcars/${carId}`)
+        .then((res) => {
+          setCar(res.data.detailCar);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching car detail:", err);
+          setLoading(false);
+        });
+    }
+  }, [carId, setLoading]);
 
   const login = async (credential) => {
     const res = await axios.post("/auth/login", credential);
@@ -83,6 +100,9 @@ export default function AuthContextProvider({ children }) {
         allCar,
         setAllCar,
         deleteCar,
+        setCarId,
+        car,
+        setCar,
       }}
     >
       {children}
