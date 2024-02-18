@@ -15,6 +15,10 @@ export default function AuthContextProvider({ children }) {
   const [allCar, setAllCar] = useState([]);
   const [carId, setCarId] = useState(null);
   const [car, setCar] = useState([]);
+  const [resultCar, setResultCar] = useState([]);
+  const [active, setActive] = useState(false);
+  const [searchCar, setSearchCar] = useState("");
+  const [isWishList, setIsWishList] = useState(false);
 
   useEffect(() => {
     if (getAccessToken()) {
@@ -53,6 +57,7 @@ export default function AuthContextProvider({ children }) {
         .get(`/allcars/${carId}`)
         .then((res) => {
           setCar(res.data.detailCar);
+          setIsWishList(res.data.isWishList);
           setLoading(false);
         })
         .catch((err) => {
@@ -103,6 +108,14 @@ export default function AuthContextProvider({ children }) {
         setCarId,
         car,
         setCar,
+        resultCar,
+        setResultCar,
+        active,
+        setActive,
+        searchCar,
+        setSearchCar,
+        isWishList,
+        setIsWishList,
       }}
     >
       {children}

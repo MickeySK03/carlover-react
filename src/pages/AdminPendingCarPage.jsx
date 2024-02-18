@@ -23,7 +23,7 @@ export default function AdminPendingCarPage() {
   return (
     <>
       {loading && <Loading />}
-      <div className="min-h-screen">
+      <div className="">
         <h1 className="text-center mt-3 font-extrabold text-xl">
           รถที่รอตรวจสอบการชำระเงิน
         </h1>

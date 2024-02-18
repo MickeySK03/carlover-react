@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export default function HomePage() {
-  const { loading, allCar } = useAuth();
+  const { loading, allCar, setSearchCar } = useAuth();
 
   const settings = {
     dots: false,
@@ -29,7 +29,7 @@ export default function HomePage() {
           <img src={bodyPic} alt="usecarhome" className="items-center" />
         </div>
         <div className="text-end mx-6">
-          <Link to="/allcars">
+          <Link to="/allcars" onClick={() => setSearchCar("")}>
             <button className="">ดูเพิ่มเติม</button>
           </Link>
         </div>

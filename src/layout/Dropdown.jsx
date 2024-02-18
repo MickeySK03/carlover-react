@@ -92,6 +92,13 @@ export default function Dropdown() {
                       </div>
                     </Link>
                   </div>
+                  <div>
+                    <Link to={"/wishlist"} onClick={() => setIsOpen(false)}>
+                      <div className="flex px-3 gap-4 py-2 items-center rounded-xl hover:bg-gray-100">
+                        <button>รายการโปรด</button>
+                      </div>
+                    </Link>
+                  </div>
                   <hr className="mx-2 border" />
                   <div
                     className="flex px-3 gap-4 py-2 items-center cursor-pointer rounded-xl hover:bg-gray-100"

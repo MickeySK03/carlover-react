@@ -164,7 +164,7 @@ export default function EditCarPage() {
                       key={index}
                       src={URL.createObjectURL(file)}
                       alt={`Preview ${index}`}
-                      className="h-40 object-cover"
+                      className="h-40 object-cover mx-auto"
                     />
                     <div
                       onClick={() => {

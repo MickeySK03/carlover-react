@@ -7,36 +7,32 @@ import { useAuth } from "../hooks/use-auth";
 import Loading from "../components/Loading";
 import Slider from "react-slick";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { FaHeart } from "react-icons/fa";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Modal from "../components/Modal";
 
 export default function DetailCarPage() {
-  const { deleteCar, authUser, loading, car, setCarId } = useAuth();
+  const {
+    deleteCar,
+    authUser,
+    loading,
+    car,
+    setCarId,
+    isWishList,
+    setIsWishList,
+  } = useAuth();
   const { state } = useLocation();
-  // const [car, setCar] = useState([]);
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { carId } = useParams();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setCarId(carId);
   }, [carId, setCarId]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`/allcars/${carId}`)
-  //     .then((res) => {
-  //       setCar(res.data.detailCar);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error fetching car detail:", err);
-  //       setLoading(false);
-  //     });
-  // }, [carId, setLoading]);
-  // console.log(car);
 
   const createdDate = new Date(car.createAt);
   const formatDate = createdDate.toLocaleDateString("en-GB");
@@ -119,12 +115,18 @@ export default function DetailCarPage() {
     await axios.patch(`/admincar/${carId}`);
     navigate("/adminbookcar");
   };
+
+  const handleClickWishList = async () => {
+    await axios.post(`/wishlist/${carId}`);
+    setIsWishList(!isWishList);
+  };
+
   return (
     <>
       {loading && <Loading />}
       <div className="flex flex-col">
         <div className="flex flex-row justify-center items-center">
-          <div className="w-1/2 flex justify-center">
+          <div className="w-3/5 flex justify-center">
             <div className="w-full">
               <Slider {...settings}>
                 {images.map((image, index) => (
@@ -139,20 +141,67 @@ export default function DetailCarPage() {
               </Slider>
             </div>
           </div>
-          <div className="w-1/2 m-3">
-            <div className="font-bold text-xl">
-              {car.brand} {car.model}
+          <div className="w-2/5 m-3">
+            <div className="flex flex-row items-baseline gap-2">
+              <div className="text-2xl ">{car.year}</div>
+              <div className="font-bold text-2xl ">
+                {TitleLetter(car.brand)}
+              </div>
+              <div className="text-xl">{TitleLetter(car.model)}</div>
             </div>
-            <div className="text-lg">ปี {car.year}</div>
-            <div className="text-blue-700">ราคา {price} บาท</div>
-            <h1>สถานที่: {car.location}</h1>
-            <h1>วันที่ลงขาย: {formatDate}</h1>
-            <div>รายละเอียด:</div>
-            <div className="border h-48 overflow-auto p-2">
-              {car.description}
+            <div className="text-blue-700 text-xl">ราคา {price} บาท</div>
+            <div className="flex flex-row gap-2 text-lg">
+              <div>สถานที่:</div>
+              <div>{car.location}</div>
+            </div>
+            <div className="flex flex-row gap-2 text-lg">
+              <div className="text-lg">วันที่ลงขาย: </div>
+              <div>{formatDate}</div>
+            </div>
+            <div className="flex flex-row gap-2 text-lg">
+              <div>รายละเอียด:</div>
+              <div>{car.description}</div>
+            </div>
+
+            <div className="flex flex-row justify-around border mt-10">
+              <hr />
+              <div className="flex flex-col w-full ">
+                <div className="flex flex-row justify-between mx-10">
+                  <div>Color</div>
+                  <div className="font-bold">{TitleLetter(car.color)}</div>
+                </div>
+                <hr />
+                <div className="flex flex-row justify-between mx-10">
+                  <div>Mileage</div>
+                  <div className="font-bold">{mileage}</div>
+                </div>
+                <hr />
+                <div className="flex flex-row justify-between mx-10">
+                  <div>Drivetrain</div>
+                  <div className="font-bold">{TitleLetter(car.driveTrain)}</div>
+                </div>
+              </div>
+              <div className="flex flex-col w-full">
+                <div className="flex flex-row justify-between mx-10">
+                  <div>FuelType</div>
+                  <div className="font-bold">{TitleLetter(car.fuelType)}</div>
+                </div>
+                <hr />
+                <div className="flex flex-row justify-between mx-10">
+                  <div>Transmission</div>
+                  <div className="font-bold">
+                    {TitleLetter(car.transmission)}
+                  </div>
+                </div>
+                <hr />
+                <div className="flex flex-row justify-between mx-10">
+                  <div>Seat</div>
+                  <div className="font-bold">{car.seat}</div>
+                </div>
+              </div>
             </div>
             {authUser.role === "ADMIN" ? (
-              <div>
+              <div className="mt-20">
                 {car.isReserve === false ? (
                   <div className="flex justify-center mt-3">
                     <Link to={`/editcar/${carId}`}>
@@ -189,7 +238,16 @@ export default function DetailCarPage() {
                 )}
               </div>
             ) : (
-              <div>
+              <div className="flex justify-around mt-20">
+                <div className="flex flex-row gap-2 mt-3">
+                  <FaHeart
+                    className={`flex justify-center text-2xl cursor-pointer ${
+                      isWishList ? "text-red-500" : "text-slate-400"
+                    }`}
+                    onClick={handleClickWishList}
+                  />
+                  รายการโปรด
+                </div>
                 {car.isReserve === false ? (
                   <div className="flex justify-center mt-3">
                     <Link to={`/checkout/${carId}`}>
@@ -215,46 +273,25 @@ export default function DetailCarPage() {
           </div>
         </div>
 
-        <div className="flex flex-row justify-around w-auto border mt-24">
-          <hr />
-          <div className="flex flex-col w-1/4 ">
-            <div className="flex flex-row justify-between mx-10">
-              <div>Color</div>
-              <div className="font-bold">{TitleLetter(car.color)}</div>
-            </div>
-            <hr />
-            <div className="flex flex-row justify-between mx-10">
-              <div>Mileage</div>
-              <div className="font-bold">{mileage}</div>
-            </div>
-            <hr />
-            <div className="flex flex-row justify-between mx-10">
-              <div>Drivetrain</div>
-              <div className="font-bold">{TitleLetter(car.driveTrain)}</div>
-            </div>
-          </div>
-          <div className="flex flex-col w-1/4">
-            <div className="flex flex-row justify-between mx-10">
-              <div>FuelType</div>
-              <div className="font-bold">{TitleLetter(car.fuelType)}</div>
-            </div>
-            <hr />
-            <div className="flex flex-row justify-between mx-10">
-              <div>Transmission</div>
-              <div className="font-bold">{TitleLetter(car.transmission)}</div>
-            </div>
-            <hr />
-            <div className="flex flex-row justify-between mx-10">
-              <div>Seat</div>
-              <div className="font-bold">{car.seat}</div>
-            </div>
-          </div>
-        </div>
-        {state?.status === "Pending" ? (
-          <div className=" flex flex-col justify-center items-center mt-10">
-            <div className="font-semibold mb-4">หลักฐานการชำระเงิน</div>
-            <img src={state.image} alt="" className="w-[300px]" />
-          </div>
+        {car.isReserve === true ? (
+          <>
+            <button
+              className="fixed self-center bottom-32 bg-green-400 py-2 px-3 rounded-lg"
+              onClick={() => setIsOpen(true)}
+            >
+              ดูหลักฐานการชำระเงิน
+            </button>
+            <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+              <div className=" flex flex-col justify-center items-center mt-10">
+                <div className="font-semibold mb-4">หลักฐานการชำระเงิน</div>
+                <img
+                  src={car.reserveCar[0]?.image}
+                  alt=""
+                  className="w-[300px]"
+                />
+              </div>
+            </Modal>
+          </>
         ) : (
           <div className="hidden"></div>
         )}

@@ -5,26 +5,27 @@ import Loading from "../components/Loading";
 import validateSchema from "../utils/validate-schema";
 import { paymentSchema } from "../utils/product-validator";
 import InputErrorMessage from "../features/auth/InputErrorMessage";
+import TitleLetter from "../components/TitleLetter";
+import LocaleString from "../components/LocaleString";
+import { useAuth } from "../hooks/use-auth";
 
 export default function CheckOutPage() {
   const [file, setFile] = useState(null);
   const fileEl = useRef(null);
-  const [bookcar, setBookCar] = useState([]);
+  // const [bookcar, setBookCar] = useState([]);
+  const { car, setCarId, loading, setLoading } = useAuth();
   const { carId } = useParams();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [payment, setPayment] = useState({ userPhone: "" });
   const [error, setError] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
+  console.log("car number", carId);
+
   useEffect(() => {
-    axios
-      .get(`/allcars/${carId}`)
-      .then((res) => {
-        setBookCar(res.data.detailCar);
-      })
-      .catch((err) => console.log(err));
-  }, [carId]);
+    setCarId(carId);
+  }, [carId, setCarId]);
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -32,6 +33,7 @@ export default function CheckOutPage() {
     }
   };
 
+  console.log(car);
   const handleSubmitForm = async (e) => {
     try {
       e.preventDefault();
@@ -68,16 +70,28 @@ export default function CheckOutPage() {
         <div className="flex flex-col justify-center items-center m-5 h-full">
           <div className="flex flex-row border p-3">
             <img
-              src={bookcar.image}
+              src={
+                car.imageCar && car.imageCar.length > 0
+                  ? car.imageCar[0].image
+                  : ""
+              }
               alt="coverReserveCar"
               className="w-[300px]"
             />
             <div className="ml-5">
-              <div className="text-slate-600">
-                {bookcar.brand} {bookcar.model}
+              <div className="flex flex-row">
+                <div className="">
+                  <TitleLetter text={car.brand} />
+                </div>
+                <div>
+                  <TitleLetter text={car.model} />
+                </div>
               </div>
-              <div>ปี {bookcar.year}</div>
-              <div className="text-blue-600">ราคา {bookcar.price} บาท</div>
+              <div>ปี {car.year}</div>
+
+              <div className="text-blue-600">
+                ราคา <LocaleString number={car.price} /> บาท
+              </div>
             </div>
           </div>
 
@@ -137,7 +151,7 @@ export default function CheckOutPage() {
             <div className="flex justify-between mt-3">
               <div className="font-bold text-lg">ค่าธรรมเนียมการจอง</div>
               <div className="font-bold text-lg text-cyan-500">
-                {bookcar.reservePrice} บาท
+                <LocaleString number={car.reservePrice} บาท />
               </div>
             </div>
             <div className="flex justify-center mt-3">

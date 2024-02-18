@@ -16,6 +16,8 @@ import UserBookCarPage from "../pages/UserBookCarPage";
 import AdminBookCarPage from "../pages/AdminBookCarPage";
 import RedirectIfNotAdmin from "../features/auth/RedirectIfNotAdmin";
 import AdminPendingCarPage from "../pages/AdminPendingCarPage";
+import SearchCarPage from "../pages/SearchCarPage";
+import UserWishListCarPage from "../pages/UserWishListCarPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
             <AllCarsPage />
           </Authenticated>
         ),
+      },
+      {
+        path: "searchcar",
+        element: <SearchCarPage />,
       },
       {
         path: "allcars/:carId",
@@ -95,6 +101,14 @@ const router = createBrowserRouter([
         element: (
           <Authenticated>
             <UserBookCarPage />
+          </Authenticated>
+        ),
+      },
+      {
+        path: "wishlist",
+        element: (
+          <Authenticated>
+            <UserWishListCarPage />
           </Authenticated>
         ),
       },

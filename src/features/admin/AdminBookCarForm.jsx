@@ -2,19 +2,19 @@ import calender from "../../assets/carDetail/calender.svg";
 import wheel from "../../assets/carDetail/wheelDrive.svg";
 import fuel from "../../assets/carDetail/gasStation.svg";
 import passenger from "../../assets/carDetail/person.svg";
+import LocaleString from "../../components/LocaleString";
 
 export default function AdminBookCarForm({ carObj }) {
   const createdDate = new Date(carObj.createAt);
   const formatDate = createdDate.toLocaleDateString("en-GB");
 
-  // console.log(carObj);
   return (
     <>
       {carObj.status === "Reserved" ? (
         <div className="flex flex-row border rounded-lg overflow-hidden h-auto w-auto m-3 bg-white shadow-md">
           <div className="h-auto w-1/4 overflow-hidden">
             <img
-              src={carObj.car.image}
+              src={carObj.car.imageCar[0]?.image}
               alt="ImgCar"
               className="w-full h-full object-cover"
             />
@@ -24,7 +24,7 @@ export default function AdminBookCarForm({ carObj }) {
               {carObj.car.brand} รุ่น {carObj.car.model}
             </h1>
             <div className="text-lg text-orange-500 mb-4">
-              ราคา {carObj.car.price} บาท
+              ราคา <LocaleString number={carObj.car.price} /> บาท
             </div>
             <div className="grid gap-4 grid-cols-2 grid-rows-2 ml-20">
               <div className="flex items-center">
@@ -51,7 +51,7 @@ export default function AdminBookCarForm({ carObj }) {
             </div>
             <div className="text-base text-gray-600">จองเมื่อ {formatDate}</div>
             <div className="text-lg font-bold text-blue-700">
-              ราคาจอง: {carObj.car.reservePrice} บาท
+              ราคาจอง: <LocaleString number={carObj.car.reservePrice} /> บาท
             </div>
           </div>
         </div>

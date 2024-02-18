@@ -13,8 +13,9 @@ export default function UserBookCarPage() {
       })
       .catch((err) => console.log(err));
   }, [setUserCar]);
+
   return (
-    <div className="min-h-screen">
+    <div className="">
       <h1 className="font-extrabold text-xl text-center mt-5">รถที่คุณจอง</h1>
       {userCar.length > 0 ? (
         <div className="grid gap-4 grid-rows-[auto_1fr] grid-cols-1  mx-10 mb-3">

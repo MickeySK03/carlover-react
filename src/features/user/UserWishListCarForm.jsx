@@ -3,14 +3,12 @@ import calender from "../../assets/carDetail/calender.svg";
 import wheel from "../../assets/carDetail/wheelDrive.svg";
 import fuel from "../../assets/carDetail/gasStation.svg";
 import passenger from "../../assets/carDetail/person.svg";
+import TitleLetter from "../../components/TitleLetter";
 import LocaleString from "../../components/LocaleString";
 
-export default function AdminPendingCarForm({ carObj, carId }) {
-  const createdDate = new Date(carObj.createAt);
-  const formatDate = createdDate.toLocaleDateString("en-GB");
-
+export default function UserWishListCarForm({ carObj, carId }) {
   return (
-    <Link to={`/allcars/${carId}`} state={carObj}>
+    <Link to={`/allcars/${carId}`}>
       <div className="flex flex-row border rounded-lg overflow-hidden h-auto w-auto m-3 bg-white shadow-md">
         <div className="h-auto w-1/4 overflow-hidden">
           <img
@@ -21,9 +19,9 @@ export default function AdminPendingCarForm({ carObj, carId }) {
         </div>
         <div className="flex flex-col h-auto w-3/5 p-4">
           <h1 className="text-2xl font-semibold mb-2">
-            {carObj.car.brand} รุ่น {carObj.car.model}
+            <TitleLetter text={carObj.car.brand} /> รุ่น {carObj.car.model}
           </h1>
-          <div className="text-lg text-orange-500 mb-4">
+          <div className="text-xl text-orange-500 mb-4">
             ราคา <LocaleString number={carObj.car.price} /> บาท
           </div>
           <div className="grid gap-4 grid-cols-2 grid-rows-2 ml-20">
@@ -46,17 +44,8 @@ export default function AdminPendingCarForm({ carObj, carId }) {
           </div>
         </div>
         <div className="flex flex-col justify-around items-end h-auto w-1/5 p-4">
-          {carObj.status === "Pending" ? (
-            <div className="text-red-500">รอยืนยันการชำระเงิน</div>
-          ) : (
-            <div className="hidden"></div>
-          )}
-          <div className="text-xl font-bold">
-            ชื่อผู้จอง: {carObj.user.username}
-          </div>
-          <div className="text-base text-gray-600">จองเมื่อ {formatDate}</div>
           <div className="text-lg font-bold text-blue-700">
-            ราคาจอง: {carObj.car.reservePrice} บาท
+            ราคาจอง: <LocaleString number={carObj.car.reservePrice} /> บาท
           </div>
         </div>
       </div>
